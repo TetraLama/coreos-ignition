@@ -1,5 +1,5 @@
 variant: fcos
-version: 1.4.0
+version: 1.7.0
 passwd:
   users:
     - name: core
@@ -12,6 +12,9 @@ passwd:
         - sudo
         - docker
 storage:
+  links:
+    - path: /etc/localtime
+      target: ../usr/share/zoneinfo/Europe/Paris
   directories:
     - path: /etc/ucore-autorebase
       mode: 0754
