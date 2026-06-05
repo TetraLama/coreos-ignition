@@ -1,6 +1,6 @@
 {
   "ignition": {
-    "version": "3.3.0"
+    "version": "3.6.0"
   },
   "passwd": {
     "users": [
@@ -35,6 +35,12 @@
           "source": "data:,coreos-crashtest.prairie.ovh"
         },
         "mode": 420
+      }
+    ],
+    "links": [
+      {
+        "path": "/etc/localtime",
+        "target": "../usr/share/zoneinfo/Europe/Paris"
       }
     ]
   },
