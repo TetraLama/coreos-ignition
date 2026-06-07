@@ -1,5 +1,5 @@
 variant: fcos
-version: 1.7.0
+version: 1.5.0
 passwd:
   users:
     - name: core
@@ -29,7 +29,7 @@ storage:
       mode: 0644
       contents:
         inline: zfs
-    - path: /etc/systemd/system/mnt-wd-external.mount
+    - path: /etc/systemd/system/var-mnt-external-wd.mount
       mode: 0644
       contents:
         inline: |
@@ -91,3 +91,7 @@ systemd:
         ExecStart=/usr/bin/systemctl reboot
         [Install]
         WantedBy=multi-user.target
+    # Enable automatic mounting of the external WD drive at boot, so that it's available for use without manual intervention.
+    - name: var-mnt-external-wd.mount
+      enabled: true
+  
