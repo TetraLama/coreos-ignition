@@ -24,7 +24,7 @@ storage:
       mode: 0644
       overwrite: true
       contents:
-        inline: coreos-crashtest.prairie.ovh
+        inline: zserv.prairie.ovh
 systemd:
   units:
     - name: ucore-unsigned-autorebase.service

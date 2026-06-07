@@ -33,7 +33,7 @@
         "path": "/etc/hostname",
         "contents": {
           "compression": "",
-          "source": "data:,coreos-crashtest.prairie.ovh"
+          "source": "data:,zserv.prairie.ovh"
         },
         "mode": 420
       }
