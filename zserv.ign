@@ -92,6 +92,11 @@
       {
         "enabled": true,
         "name": "var-mnt-external-wd.mount"
+      },
+      {
+        "contents": "[Unit]\nDescription=Enable podman socket and lingering for core user\nAfter=network.target\nConditionPathExists=!/var/lib/%n.done\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/loginctl enable-linger core\nExecStart=/bin/bash -c 'mkdir -p /var/home/core/.config/systemd/user/default.target.wants \u0026\u0026 ln -sf /usr/lib/systemd/user/podman.socket /var/home/core/.config/systemd/user/default.target.wants/podman.socket \u0026\u0026 chown -R core:core /var/home/core/.config'\nExecStart=/usr/bin/touch /var/lib/%n.done\n\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "setup-podman-user.service"
       }
     ]
   }

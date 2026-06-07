@@ -96,4 +96,21 @@ systemd:
     # Enable automatic mounting of the external WD drive at boot, so that it's available for use without manual intervention.
     - name: var-mnt-external-wd.mount
       enabled: true
-  
+    # Ensure the podman socket is available for the core user, and that lingering is enabled so that containers can run without an active user session.
+    - name: setup-podman-user.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Enable podman socket and lingering for core user
+        After=network.target
+        ConditionPathExists=!/var/lib/%n.done
+
+        [Service]
+        Type=oneshot
+        RemainAfterExit=yes
+        ExecStart=/usr/bin/loginctl enable-linger core
+        ExecStart=/bin/bash -c 'mkdir -p /var/home/core/.config/systemd/user/default.target.wants && ln -sf /usr/lib/systemd/user/podman.socket /var/home/core/.config/systemd/user/default.target.wants/podman.socket && chown -R core:core /var/home/core/.config'
+        ExecStart=/usr/bin/touch /var/lib/%n.done
+
+        [Install]
+        WantedBy=multi-user.target
