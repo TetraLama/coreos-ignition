@@ -1,6 +1,6 @@
 {
   "ignition": {
-    "version": "3.6.0"
+    "version": "3.4.0"
   },
   "passwd": {
     "users": [
@@ -45,7 +45,7 @@
         "mode": 420
       },
       {
-        "path": "/etc/systemd/system/mnt-wd-external.mount",
+        "path": "/etc/systemd/system/var-mnt-external-wd.mount",
         "contents": {
           "compression": "gzip",
           "source": "data:;base64,H4sIAAAAAAAC/zTOsU7DMBCA4f2eIg+AcaWmTTJ4AIWBAbGAPEQZrrkztXCdyj6HhqdHiuj+S/83fEYvI/Scp+Sv4udo3uYSpbJ99XITThFD1Se/MDw54WR+XX4UTF8sAMOWjmDPKEYTL5p8/tanVZXiSSPuabc7tmp/altVT8Sqqw+tOjTHZmLXNU1HYM+c2OgFk75E0fz/1D8EH+uVDd+khvdNlg2xwxIkP8TZoQ8Aw2vMgiGMYDEK0/NqLiWIVyVzujv/AgAA///h7QhS5AAAAA=="
@@ -84,6 +84,10 @@
         "contents": "[Unit]\nDescription=uCore autorebase to signed OCI and reboot\nConditionPathExists=/etc/ucore-autorebase/unverified\nConditionPathExists=!/etc/ucore-autorebase/signed\nAfter=network-online.target\nWants=network-online.target\n[Service]\nType=oneshot\nStandardOutput=journal+console\nExecStart=/usr/bin/rpm-ostree rebase --bypass-driver ostree-image-signed:docker://ghcr.io/ublue-os/ucore:stable-nvidia\nExecStart=/usr/bin/touch /etc/ucore-autorebase/signed\nExecStart=/usr/bin/systemctl disable ucore-signed-autorebase.service\nExecStart=/usr/bin/systemctl reboot\n[Install]\nWantedBy=multi-user.target\n",
         "enabled": true,
         "name": "ucore-signed-autorebase.service"
+      },
+      {
+        "enabled": true,
+        "name": "var-mnt-external-wd.mount"
       }
     ]
   }
