@@ -19,7 +19,32 @@ storage:
   directories:
     - path: /etc/ucore-autorebase
       mode: 0754
+    - path: /var/mnt/external/wd
+      mode: 0755
+    - path: /var/mnt/zfs/lamapound 
+      mode: 0755
   files:
+    # Enable ZFS module loading at boot, so that the pool can be imported and used without manual intervention.
+    - path: /etc/modules-load.d/zfs.conf
+      mode: 0644
+      contents:
+        inline: zfs
+    - path: /etc/systemd/system/mnt-wd-external.mount
+      mode: 0644
+      contents:
+        inline: |
+          [Unit]
+          Description=Mount WD External Drive
+          After=zfs.target
+
+          [Mount]
+          What=/dev/disk/by-uuid/aa3d0068-3b88-4cde-9458-5767cef9779d
+          Where=/var/mnt/external/wd
+          Type=ext4
+          Options=defaults,nofail
+
+          [Install]
+          WantedBy=multi-user.target
     - path: /etc/hostname
       mode: 0644
       overwrite: true
@@ -27,6 +52,9 @@ storage:
         inline: zserv.prairie.ovh
 systemd:
   units:
+    # Monthly ZFS scrub, to keep the pool healthy and detect any potential issues early on.
+    - name: zfs-scrub-monthly@lamapound.timer
+      enabled: true
     - name: ucore-unsigned-autorebase.service
       enabled: true
       contents: |
