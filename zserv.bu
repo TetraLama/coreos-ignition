@@ -47,6 +47,12 @@ storage:
 
           [Install]
           WantedBy=multi-user.target
+    # Allow the core user to bind to privileged ports (below 1024) without needing root privileges, which is useful for running services like web servers directly as the core user.
+    - path: /etc/sysctl.d/99-unprivileged-port.conf
+      mode: 0644
+      contents:
+        inline: |
+          net.ipv4.ip_unprivileged_port_start=53
     - path: /etc/hostname
       mode: 0644
       overwrite: true
@@ -111,6 +117,20 @@ systemd:
         ExecStart=/usr/bin/loginctl enable-linger core
         ExecStart=/bin/bash -c 'mkdir -p /var/home/core/.config/systemd/user/default.target.wants && ln -sf /usr/lib/systemd/user/podman.socket /var/home/core/.config/systemd/user/default.target.wants/podman.socket && chown -R core:core /var/home/core/.config'
         ExecStart=/usr/bin/touch /var/lib/%n.done
+
+        [Install]
+        WantedBy=multi-user.target
+    - name: set-podman-cap-net-bind.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Grant podman CAP_NET_BIND_SERVICE for port 53
+        After=network.target
+
+        [Service]
+        Type=oneshot
+        ExecStart=/usr/sbin/setcap cap_net_bind_service=ep /usr/bin/podman
+        RemainAfterExit=yes
 
         [Install]
         WantedBy=multi-user.target

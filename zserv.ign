@@ -57,6 +57,14 @@
         "mode": 420
       },
       {
+        "path": "/etc/sysctl.d/99-unprivileged-port.conf",
+        "contents": {
+          "compression": "",
+          "source": "data:,net.ipv4.ip_unprivileged_port_start%3D53%0A"
+        },
+        "mode": 420
+      },
+      {
         "overwrite": true,
         "path": "/etc/hostname",
         "contents": {
@@ -97,6 +105,11 @@
         "contents": "[Unit]\nDescription=Enable podman socket and lingering for core user\nAfter=network.target\nConditionPathExists=!/var/lib/%n.done\n\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/loginctl enable-linger core\nExecStart=/bin/bash -c 'mkdir -p /var/home/core/.config/systemd/user/default.target.wants \u0026\u0026 ln -sf /usr/lib/systemd/user/podman.socket /var/home/core/.config/systemd/user/default.target.wants/podman.socket \u0026\u0026 chown -R core:core /var/home/core/.config'\nExecStart=/usr/bin/touch /var/lib/%n.done\n\n[Install]\nWantedBy=multi-user.target\n",
         "enabled": true,
         "name": "setup-podman-user.service"
+      },
+      {
+        "contents": "[Unit]\nDescription=Grant podman CAP_NET_BIND_SERVICE for port 53\nAfter=network.target\n\n[Service]\nType=oneshot\nExecStart=/usr/sbin/setcap cap_net_bind_service=ep /usr/bin/podman\nRemainAfterExit=yes\n\n[Install]\nWantedBy=multi-user.target\n",
+        "enabled": true,
+        "name": "set-podman-cap-net-bind.service"
       }
     ]
   }
