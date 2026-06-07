@@ -33,6 +33,10 @@
       {
         "path": "/var/mnt/zfs/lamapound",
         "mode": 493
+      },
+      {
+        "path": "/var/opt/docker-data",
+        "mode": 493
       }
     ],
     "files": [

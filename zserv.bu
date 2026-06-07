@@ -23,6 +23,8 @@ storage:
       mode: 0755
     - path: /var/mnt/zfs/lamapound 
       mode: 0755
+    - path: /var/opt/docker-data
+      mode: 0755
   files:
     # Enable ZFS module loading at boot, so that the pool can be imported and used without manual intervention.
     - path: /etc/modules-load.d/zfs.conf
